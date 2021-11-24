@@ -18,6 +18,10 @@ impl HttpHandler {
             "User-Agent",
             HeaderValue::from_str("piston-rs-client").unwrap(),
         );
+        headers.insert(
+            "Accept",
+            HeaderValue::from_str("application/json").unwrap(),
+        );
 
         if let Some(k) = key {
             headers.insert("Authorization", HeaderValue::from_str(k).unwrap());
