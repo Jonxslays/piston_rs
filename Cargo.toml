@@ -1,0 +1,20 @@
+[package]
+name = "piston_rs"
+description = "A Rust wrapper for accessing the Piston API."
+version = "0.1.0"
+edition = "2021"
+authors = ["Jonxslays"]
+readme = "README.md"
+homepage = "https://github.com/Jonxslays/piston_rs"
+repository = "https://github.com/Jonxslays/piston_rs"
+keywords = ["piston-rs", "piston", "emkc", "code"]
+categories = ["api-bindings", "asynchronous"]
+
+[lib]
+name = "piston_rs"
+include = ["src/lib.rs"]
+
+[dependencies]
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1", features = ["derive"]}
+tokio = { version = "1", features = ["full"] }
