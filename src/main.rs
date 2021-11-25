@@ -4,8 +4,8 @@ use piston_rs::Client;
 
 #[tokio::main]
 async fn main() {
-    let client = Client::default();
-    match client.get_languages().await {
+    let mut client = Client::default();
+    match client.fetch_languages().await {
         Ok(_) => (),
         Err(e) => println!("{}", e),
     }

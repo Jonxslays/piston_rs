@@ -34,7 +34,7 @@ impl HttpHandler {
         }
     }
 
-    pub async fn get_languages(&self) -> Result<Vec<Language>, Box<dyn Error>> {
+    pub async fn fetch_languages(&self) -> Result<Vec<Language>, Box<dyn Error>> {
         let endpoint = format!("{}/runtimes", self.url);
         let languages = self
             .client

@@ -4,7 +4,7 @@ mod client;
 mod http;
 pub use client::Client;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Language {
     #[serde(rename = "language")]
     pub name: String,
