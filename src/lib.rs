@@ -9,17 +9,16 @@ pub use executor::ExecutorResponse;
 pub use executor::ExecutionResult;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct Language {
-    #[serde(rename = "language")]
-    pub name: String,
+pub struct Runtime {
+    pub language: String,
     pub version: String,
     pub aliases: Vec<String>,
 }
 
-impl Language {
-    pub fn new(name: String, version: String, aliases: Vec<String>) -> Self {
+impl Runtime {
+    pub fn new(language: String, version: String, aliases: Vec<String>) -> Self {
         Self {
-            name,
+            language,
             version,
             aliases,
         }

@@ -4,7 +4,7 @@ use reqwest::header::{HeaderMap, HeaderValue};
 
 use super::Executor;
 use super::ExecutorResponse;
-use super::Language;
+use super::Runtime;
 
 #[derive(Debug)]
 pub struct Client {
@@ -48,18 +48,18 @@ impl Client {
         headers
     }
 
-    pub async fn fetch_languages(&self) -> Result<Vec<Language>, Box<dyn Error>> {
+    pub async fn fetch_runtimes(&self) -> Result<Vec<Runtime>, Box<dyn Error>> {
         let endpoint = format!("{}/runtimes", self.url);
-        let languages = self
+        let runtimes = self
             .client
             .get(endpoint)
             .headers(self.headers.clone())
             .send()
             .await?
-            .json::<Vec<Language>>()
+            .json::<Vec<Runtime>>()
             .await?;
 
-        Ok(languages)
+        Ok(runtimes)
     }
 
     pub async fn execute(&self, executor: &Executor) -> Result<ExecutorResponse, Box<dyn Error>> {
