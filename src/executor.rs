@@ -48,6 +48,12 @@ pub struct Executor {
 
 impl Default for Executor {
     fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Executor {
+    pub fn new() -> Self {
         Self {
             language: String::new(),
             version: String::new(),
@@ -59,12 +65,6 @@ impl Default for Executor {
             compile_memory_limit: -1,
             run_memory_limit: -1,
         }
-    }
-}
-
-impl Executor {
-    pub fn new() -> Self {
-        Self::default()
     }
 
     pub fn set_language(mut self, language: &str) -> Self {

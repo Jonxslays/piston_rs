@@ -4,8 +4,8 @@ use piston_rs::{Client, Executor, File};
 
 #[tokio::main]
 async fn main() {
-    // Create a new mutable Client
-    let client = Client::default();
+    // Create a new Client
+    let client = Client::new_with_key("1234");
 
     // // Fetch languages from Piston. Note: The languages are added onto the
     // // Client, and a reference to them is returned.
@@ -16,10 +16,16 @@ async fn main() {
     // }
 
     // Create a new File to send to Piston. This will contain our source code.
-    let file = File::default().set_name("test.py").set_content(
-        "import random
-print(random.randint(1, 10))
-print('Hello from python!')",
+
+    let file = File::default().set_name("main.py").set_content(
+        "from test import test_func
+
+test_func()",
+    );
+
+    let file2 = File::default().set_name("test.py").set_content(
+        "def test_func():
+    print('hello from the other file!')",
     );
 
     // Create a new executor, this represents the language, other metadata
@@ -27,7 +33,7 @@ print('Hello from python!')",
     let executor = Executor::default()
         .set_language("python")
         .set_version("3.10")
-        .add_file(file);
+        .add_files([file, file2].to_vec());
 
     // Send the response to Piston, and store the result.
     let result = client.execute(&executor).await;

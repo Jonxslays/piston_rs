@@ -15,12 +15,9 @@ pub struct HttpHandler {
 
 impl HttpHandler {
     pub fn new(key: Option<&str>) -> Self {
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            "User-Agent",
-            HeaderValue::from_str("piston-rs-client").unwrap(),
-        );
+        let mut headers = HeaderMap::with_capacity(3);
         headers.insert("Accept", HeaderValue::from_str("application/json").unwrap());
+        headers.insert("User-Agent", HeaderValue::from_str("piston-rs").unwrap());
 
         if let Some(k) = key {
             headers.insert("Authorization", HeaderValue::from_str(k).unwrap());
