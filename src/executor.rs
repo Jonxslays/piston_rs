@@ -67,6 +67,18 @@ impl Executor {
         }
     }
 
+    pub fn reset(mut self) {
+        self.language = String::new();
+        self.version = String::new();
+        self.files = vec![];
+        self.stdin = String::new();
+        self.args = vec![];
+        self.compile_timeout = 10000;
+        self.run_timeout = 3000;
+        self.compile_memory_limit = -1;
+        self.run_memory_limit = -1;
+    }
+
     pub fn set_language(mut self, language: &str) -> Self {
         self.language = language.to_lowercase();
         self
