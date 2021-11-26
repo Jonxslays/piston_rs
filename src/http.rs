@@ -2,6 +2,8 @@ use std::error::Error;
 
 use reqwest::header::{HeaderMap, HeaderValue};
 
+use super::Executor;
+use super::ExecutorResponse;
 use super::Language;
 
 #[derive(Debug)]
@@ -18,10 +20,7 @@ impl HttpHandler {
             "User-Agent",
             HeaderValue::from_str("piston-rs-client").unwrap(),
         );
-        headers.insert(
-            "Accept",
-            HeaderValue::from_str("application/json").unwrap(),
-        );
+        headers.insert("Accept", HeaderValue::from_str("application/json").unwrap());
 
         if let Some(k) = key {
             headers.insert("Authorization", HeaderValue::from_str(k).unwrap());
@@ -46,5 +45,20 @@ impl HttpHandler {
             .await?;
 
         Ok(languages)
+    }
+
+    pub async fn execute(&self, executor: &Executor) -> Result<ExecutorResponse, Box<dyn Error>> {
+        let endpoint = format!("{}/execute", self.url);
+        let result = self
+            .client
+            .post(endpoint)
+            .headers(self.headers.clone())
+            .json::<Executor>(executor)
+            .send()
+            .await?
+            .json::<ExecutorResponse>()
+            .await?;
+
+        Ok(result)
     }
 }

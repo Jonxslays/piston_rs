@@ -1,6 +1,8 @@
 use std::error::Error;
 
 use super::http::HttpHandler;
+use super::Executor;
+use super::ExecutorResponse;
 use super::Language;
 
 #[derive(Debug)]
@@ -30,16 +32,20 @@ impl Client {
         }
     }
 
-    pub async fn fetch_languages(&mut self) -> Result<(), Box<dyn Error>> {
-        if self.languages.len() > 0 {
+    pub async fn fetch_languages(&mut self) -> Result<&Vec<Language>, Box<dyn Error>> {
+        if !self.languages.len() == 0 {
             self.languages.clear();
         }
 
         self.languages.extend(self.http.fetch_languages().await?);
-        Ok(())
+        Ok(&self.languages)
     }
 
     pub fn get_languages(&self) -> Vec<Language> {
         self.languages.clone()
+    }
+
+    pub async fn execute(&self, executor: &Executor) -> Result<ExecutorResponse, Box<dyn Error>> {
+        self.http.execute(executor).await
     }
 }
