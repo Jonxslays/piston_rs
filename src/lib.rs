@@ -2,10 +2,11 @@ use serde::{Deserialize, Serialize};
 
 mod client;
 mod executor;
-mod http;
 
 pub use client::Client;
-pub use executor::{ExecutionResult, Executor, ExecutorResponse};
+pub use executor::Executor;
+pub use executor::ExecutorResponse;
+pub use executor::ExecutionResult;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Language {

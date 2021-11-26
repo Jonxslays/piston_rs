@@ -1,13 +1,16 @@
 use std::error::Error;
 
-use super::http::HttpHandler;
+use reqwest::header::{HeaderMap, HeaderValue};
+
 use super::Executor;
 use super::ExecutorResponse;
 use super::Language;
 
 #[derive(Debug)]
 pub struct Client {
-    http: HttpHandler,
+    url: String,
+    client: reqwest::Client,
+    headers: HeaderMap,
 }
 
 impl Default for Client {
@@ -19,21 +22,58 @@ impl Default for Client {
 impl Client {
     pub fn new() -> Self {
         Self {
-            http: HttpHandler::new(None),
+            url: "https://emkc.org/api/v2/piston".to_string(),
+            client: reqwest::Client::new(),
+            headers: Self::generate_headers(None),
         }
     }
 
     pub fn new_with_key(key: &str) -> Self {
         Self {
-            http: HttpHandler::new(Some(key)),
+            url: "https://emkc.org/api/v2/piston".to_string(),
+            client: reqwest::Client::new(),
+            headers: Self::generate_headers(Some(key)),
         }
     }
 
+    fn generate_headers(key: Option<&str>) -> HeaderMap {
+        let mut headers = HeaderMap::with_capacity(3);
+        headers.insert("Accept", HeaderValue::from_str("application/json").unwrap());
+        headers.insert("User-Agent", HeaderValue::from_str("piston-rs").unwrap());
+
+        if let Some(k) = key {
+            headers.insert("Authorization", HeaderValue::from_str(k).unwrap());
+        };
+
+        headers
+    }
+
     pub async fn fetch_languages(&self) -> Result<Vec<Language>, Box<dyn Error>> {
-        self.http.fetch_languages().await
+        let endpoint = format!("{}/runtimes", self.url);
+        let languages = self
+            .client
+            .get(endpoint)
+            .headers(self.headers.clone())
+            .send()
+            .await?
+            .json::<Vec<Language>>()
+            .await?;
+
+        Ok(languages)
     }
 
     pub async fn execute(&self, executor: &Executor) -> Result<ExecutorResponse, Box<dyn Error>> {
-        self.http.execute(executor).await
+        let endpoint = format!("{}/execute", self.url);
+        let result = self
+            .client
+            .post(endpoint)
+            .headers(self.headers.clone())
+            .json::<Executor>(executor)
+            .send()
+            .await?
+            .json::<ExecutorResponse>()
+            .await?;
+
+        Ok(result)
     }
 }
