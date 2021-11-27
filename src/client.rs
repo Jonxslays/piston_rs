@@ -217,9 +217,7 @@ impl Client {
             .await
         {
             Ok(data) => match data.status() {
-                reqwest::StatusCode::OK => {
-                    Ok(data.json::<ExecutorResponse>().await?)
-                }
+                reqwest::StatusCode::OK => Ok(data.json::<ExecutorResponse>().await?),
                 _ => {
                     let exec_result = super::ExecutionResult {
                         stdout: String::new(),
@@ -240,9 +238,7 @@ impl Client {
                     Ok(exec_response)
                 }
             },
-            Err(e) => {
-                Err(Box::new(e))
-            }
+            Err(e) => Err(Box::new(e)),
         }
     }
 }
