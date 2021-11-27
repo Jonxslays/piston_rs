@@ -233,7 +233,7 @@ impl Client {
                         version: String::new(),
                         run: exec_result.clone(),
                         compile: None,
-                        message: Some("Error: ".to_string() + &data.text().await?),
+                        message: Some(format!("{}: {}", data.status(), data.text().await?)),
                     };
 
                     Ok(exec_response)
