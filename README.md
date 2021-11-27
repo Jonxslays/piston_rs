@@ -6,17 +6,19 @@ code execution engine.
 ## Why piston_rs
 
 piston_rs aims to make interacting with Piston fun and easy. Your main
-tools are the `Client` and `Executor` structs.
+tools are the [`Client`](https://docs.rs/piston_rs/latest/piston_rs/struct.Client.html)
+and [`Executor`](https://docs.rs/piston_rs/latest/piston_rs/struct.Executor.html) structs.
 
-The `Executor` is constructed containing the source code and other
-metadata about the code you are running. This is then sent to Piston
-via the `Client`.
+The [`Executor`](https://docs.rs/piston_rs/latest/piston_rs/struct.Executor.html)
+is constructed containing the source code and other metadata about the code you are
+running. This is then sent to Piston via the
+[`Client`](https://docs.rs/piston_rs/latest/piston_rs/struct.Client.html).
 
 piston_rs requires Rust version 1.46.0 or greater.
 
 ## Getting started
 
-For more details, check out the [documentation](https://crates.io/crates/piston_rs)!
+For more details, check out the [documentation](https://docs.rs/piston_rs/latest)!
 
 ### Add piston_rs to your project
 
