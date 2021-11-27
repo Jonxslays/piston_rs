@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  check-version:
+    name: Check Version
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check version
+        run: |
+          [[ $(sed -rn 's/version = "(.*)"/v\1/p' Cargo.toml) == ${{ github.event.release.tag_name }} ]]
+
+  test-and-publish:
+    name: Publish release
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install rust stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Login to crates.io
+        env:
+          TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+
+        run: cargo login $TOKEN
+
+      - name: Publish dry-run
+        run: cargo publish --dry-run
+
+      - name: Publish
+        run: cargo publish
