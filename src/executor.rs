@@ -85,7 +85,7 @@ impl Default for Executor {
     /// Creates a new executor. Alias for [`Executor::new`].
     ///
     /// # Returns
-    /// - [`Executor`] - A new blank Executor.
+    /// - [`Executor`] - The new blank Executor.
     ///
     /// # Example
     /// ```
@@ -106,7 +106,7 @@ impl Executor {
     /// need to be added using the associated method calls.
     ///
     /// # Returns
-    /// - [`Executor`] - A new blank Executor.
+    /// - [`Executor`] - The new blank Executor.
     ///
     /// # Example
     /// ```
