@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use super::File;
 
+
+/// The result of the code execution, returned by the Piston API.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ExecutionResult {
     pub stdout: String,
@@ -12,16 +14,16 @@ pub struct ExecutionResult {
 }
 
 impl ExecutionResult {
+    /// `true` if there was no error in the execution result returned by
+    /// Piston.
     pub fn is_ok(&self) -> bool {
-        !self.stdout.is_empty() && self.stderr.is_empty()
+        self.stderr.is_empty()
     }
 
+    /// `true` if there was an error in the execution result returned by
+    /// Piston.
     pub fn is_err(&self) -> bool {
-        self.stdout.is_empty() && !self.stderr.is_empty()
-    }
-
-    pub fn is_ok_with_err(&self) -> bool {
-        !self.stdout.is_empty() && !self.stderr.is_empty()
+        !self.stderr.is_empty()
     }
 }
 
