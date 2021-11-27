@@ -12,9 +12,9 @@ mod client;
 mod executor;
 
 pub use client::Client;
-pub use executor::ExecutionResult;
+pub use executor::ExecResponse;
+pub use executor::ExecResult;
 pub use executor::Executor;
-pub use executor::ExecutorResponse;
 
 /// A runtime available to be used by Piston.
 ///

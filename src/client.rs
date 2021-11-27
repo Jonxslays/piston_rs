@@ -2,8 +2,9 @@ use std::error::Error;
 
 use reqwest::header::{HeaderMap, HeaderValue};
 
+use super::ExecResponse;
+use super::ExecResult;
 use super::Executor;
-use super::ExecutorResponse;
 use super::Runtime;
 
 /// A client used to send requests to Piston.
@@ -205,7 +206,7 @@ impl Client {
     ///     }
     /// }
     /// ```
-    pub async fn execute(&self, executor: &Executor) -> Result<ExecutorResponse, Box<dyn Error>> {
+    pub async fn execute(&self, executor: &Executor) -> Result<ExecResponse, Box<dyn Error>> {
         let endpoint = format!("{}/execute", self.url);
 
         match self
@@ -217,9 +218,9 @@ impl Client {
             .await
         {
             Ok(data) => match data.status() {
-                reqwest::StatusCode::OK => Ok(data.json::<ExecutorResponse>().await?),
+                reqwest::StatusCode::OK => Ok(data.json::<ExecResponse>().await?),
                 _ => {
-                    let exec_result = super::ExecutionResult {
+                    let exec_result = ExecResult {
                         stdout: String::new(),
                         stderr: String::new(),
                         output: String::new(),
@@ -227,7 +228,7 @@ impl Client {
                         signal: None,
                     };
 
-                    let exec_response = super::ExecutorResponse {
+                    let exec_response = ExecResponse {
                         language: String::new(),
                         version: String::new(),
                         run: exec_result.clone(),

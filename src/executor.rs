@@ -4,7 +4,7 @@ use super::File;
 
 /// The result of code execution returned by Piston.
 #[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct ExecutionResult {
+pub struct ExecResult {
     /// The text sent to `stdout` during execution.
     pub stdout: String,
     /// The text sent to `stderr` during execution.
@@ -17,7 +17,7 @@ pub struct ExecutionResult {
     pub signal: Option<String>,
 }
 
-impl ExecutionResult {
+impl ExecResult {
     /// [`true`] if there was no error in the execution result returned
     /// by Piston.
     pub fn is_ok(&self) -> bool {
@@ -33,21 +33,21 @@ impl ExecutionResult {
 
 /// A response returned by Piston when executing code.
 #[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct ExecutorResponse {
+pub struct ExecResponse {
     /// The language that was used.
     pub language: String,
     /// The version of the language that was used.
     pub version: String,
     /// The result Piston sends detailing execution.
-    pub run: ExecutionResult,
+    pub run: ExecResult,
     /// The optional result Piston sends detailing compilation. This
     /// will be [`None`] for non-compiled languages.
-    pub compile: Option<ExecutionResult>,
+    pub compile: Option<ExecResult>,
     /// The error message returned by Piston, if any.
     pub message: Option<String>,
 }
 
-impl ExecutorResponse {
+impl ExecResponse {
     /// [`true`] if the response from Piston did not contain an error
     /// message.
     pub fn is_ok(&self) -> bool {
@@ -485,10 +485,10 @@ impl Executor {
 
 #[cfg(test)]
 mod test_execution_result {
-    use super::ExecutionResult;
+    use super::ExecResult;
 
-    fn generate_result(stdout: &str, stderr: &str, code: isize) -> ExecutionResult {
-        ExecutionResult {
+    fn generate_result(stdout: &str, stderr: &str, code: isize) -> ExecResult {
+        ExecResult {
             stdout: stdout.to_string(),
             stderr: stderr.to_string(),
             output: format!("{}\n{}", stdout, stderr),
