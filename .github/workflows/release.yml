@@ -16,12 +16,13 @@ jobs:
 
       - name: Check version
         run: |
-          [[ $(sed -rn 's/version = "(.*)"/v\1/p' Cargo.toml) == ${{ github.event.release.tag_name }} ]]
+          [[ $(grep -m 1 -oP 'version = "(.*)"' Cargo.toml | sed -rn 's/.*"(.*)"/v\1/p') == ${{ github.event.release.tag_name }} ]]
 
-  test-and-publish:
+  publish:
     name: Publish release
 
     runs-on: ubuntu-latest
+    needs: check-version
 
     steps:
       - name: Checkout code
