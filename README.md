@@ -3,7 +3,7 @@
 An async wrapper for the [Piston](https://github.com/engineer-man/piston)
 code execution engine.
 
-## Getting started
+## Why piston_rs
 
 piston_rs aims to make interacting with Piston fun and easy. Your main
 tools are the `Client` and `Executor` structs.
@@ -12,17 +12,19 @@ The `Executor` is constructed containing the source code and other
 metadata about the code you are running. This is then sent to Piston
 via the `Client`.
 
-piston_rs required Rust version 1.46.0 or greater.
+piston_rs requires Rust version 1.46.0 or greater.
 
----
+## Getting started
 
-### Add piston_rs to your Cargo.toml
+For more details, check out the [documentation](https://crates.io/crates/piston_rs)!
+
+### Add piston_rs to your project
 
 ```toml
 # Cargo.toml
 
 [dependencies]
-piston_rs = "^0.1.0"
+piston_rs = "^0.2.0"
 ```
 
 ### Make requests to Piston
