@@ -24,7 +24,7 @@ For more details, check out the [documentation](https://crates.io/crates/piston_
 # Cargo.toml
 
 [dependencies]
-piston_rs = "^0.2.0"
+piston_rs = "^0.2"
 ```
 
 ### Make requests to Piston
@@ -61,8 +61,6 @@ async fn main() {
     }
 }
 ```
-
----
 
 ## License
 

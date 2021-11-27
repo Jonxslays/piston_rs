@@ -3,6 +3,45 @@
 //! engine.
 //!
 //! Aiming to make interacting with Piston fun and easy.
+//!
+//! ## Getting started
+//!
+//! Check out the [`Client`] and [`Executor`] documentation.
+//!
+//! ##### Make requests to Piston
+//!
+//! ```ignore
+//! // main.rs
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!     let client = piston_rs::Client::new();
+//!     let executor = piston_rs::Executor::new()
+//!         .set_language("rust")
+//!         .set_version("*")
+//!         .add_file(
+//!             piston_rs::File::default()
+//!                 .set_name("main.rs")
+//!                 .set_content("fn main() { println!(\"42\"); }"),
+//!         );
+//!
+//!     match client.execute(&executor).await {
+//!         Ok(response) => {
+//!             if response.is_err() {
+//!                 println!("{}", response.message.unwrap());
+//!             } else {
+//!                 println!("Language: {}", response.language);
+//!                 println!("Version: {}", response.version);
+//!                 println!("Output:\n{}", response.run.output);
+//!             }
+//!         },
+//!         Err(e) => {
+//!             println!("Something went wrong contacting Piston.");
+//!             println!("{}", e);
+//!         },
+//!     }
+//! }
+//! ```
 
 // RIP shrimpie, gone but not forgotten.
 
