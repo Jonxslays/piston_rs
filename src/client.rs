@@ -153,16 +153,16 @@ impl Client {
     ///
     /// # Example
     /// ```no_run
-    /// #[tokio::test]
-    /// async fn test_fetch_runtimes() {
-    ///     let client = piston_rs::Client::new();
+    /// # #[tokio::test]
+    /// # async fn test_fetch_runtimes() {
+    /// let client = piston_rs::Client::new();
     ///
-    ///     if let Ok(runtimes) = client.fetch_runtimes().await {
-    ///         assert!(!runtimes.is_empty());
-    ///     } else {
-    ///         // There was an error contacting Piston.
-    ///     }
+    /// if let Ok(runtimes) = client.fetch_runtimes().await {
+    ///     assert!(!runtimes.is_empty());
+    /// } else {
+    ///     // There was an error contacting Piston.
     /// }
+    /// # }
     /// ```
     pub async fn fetch_runtimes(&self) -> Result<Vec<Runtime>, Box<dyn Error>> {
         let endpoint = format!("{}/runtimes", self.url);
@@ -187,24 +187,24 @@ impl Client {
     ///
     /// # Example
     /// ```no_run
-    /// #[tokio::test]
-    /// async fn test_execute() {
-    ///     let client = piston_rs::Client::new();
-    ///     let executor = piston_rs::Executor::new()
-    ///         .set_language("rust")
-    ///         .set_version("1.50.0")
-    ///         .add_file(piston_rs::File::default().set_content(
-    ///             "fn main() { println!(\"42\"); }",
-    ///         ));
+    /// # #[tokio::test]
+    /// # async fn test_execute() {
+    /// let client = piston_rs::Client::new();
+    /// let executor = piston_rs::Executor::new()
+    ///     .set_language("rust")
+    ///     .set_version("1.50.0")
+    ///     .add_file(piston_rs::File::default().set_content(
+    ///         "fn main() { println!(\"42\"); }",
+    ///     ));
     ///
-    ///     if let Ok(response) = client.execute(&executor).await {
-    ///         assert!(response.compile.is_some());
-    ///         assert!(response.run.is_ok());
-    ///         assert!(response.is_ok());
-    ///     } else {
-    ///         // There was an error contacting Piston.
-    ///     }
+    /// if let Ok(response) = client.execute(&executor).await {
+    ///     assert!(response.compile.is_some());
+    ///     assert!(response.run.is_ok());
+    ///     assert!(response.is_ok());
+    /// } else {
+    ///     // There was an error contacting Piston.
     /// }
+    /// # }
     /// ```
     pub async fn execute(&self, executor: &Executor) -> Result<ExecResponse, Box<dyn Error>> {
         let endpoint = format!("{}/execute", self.url);
