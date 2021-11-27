@@ -31,7 +31,7 @@ impl ExecutionResult {
     }
 }
 
-/// The response returned by Piston when executing code.
+/// A response returned by Piston when executing code.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ExecutorResponse {
     /// The language that was used.
@@ -43,6 +43,22 @@ pub struct ExecutorResponse {
     /// The optional result Piston sends detailing compilation. This
     /// will be [`None`] for non-compiled languages.
     pub compile: Option<ExecutionResult>,
+    /// The error message returned by Piston, if any.
+    pub message: Option<String>,
+}
+
+impl ExecutorResponse {
+    /// [`true`] if the response from Piston did not contain an error
+    /// message.
+    pub fn is_ok(&self) -> bool {
+        self.message.is_none()
+    }
+
+    /// [`true`] if the response from Piston did contain an error
+    /// message.
+    pub fn is_err(&self) -> bool {
+        self.message.is_some()
+    }
 }
 
 /// An object containing information about the code being executed.
@@ -190,9 +206,9 @@ impl Executor {
     /// # Example
     /// ```
     /// let executor = piston_rs::Executor::new()
-    ///     .set_version("1.56");
+    ///     .set_version("1.50.0");
     ///
-    /// assert_eq!(executor.version, "1.56".to_string());
+    /// assert_eq!(executor.version, "1.50.0".to_string());
     /// ```
     pub fn set_version(mut self, version: &str) -> Self {
         self.version = version.to_string();
@@ -483,7 +499,7 @@ mod test_execution_result {
 
     #[test]
     fn test_is_ok() {
-        let result = generate_result("Hello, world","",0);
+        let result = generate_result("Hello, world", "", 0);
 
         assert!(result.is_ok());
         assert!(!result.is_err());
@@ -491,7 +507,7 @@ mod test_execution_result {
 
     #[test]
     fn test_is_err() {
-        let result = generate_result("","Error!",1);
+        let result = generate_result("", "Error!", 1);
 
         assert!(!result.is_ok());
         assert!(result.is_err());
@@ -499,7 +515,7 @@ mod test_execution_result {
 
     #[test]
     fn test_is_err_with_stdout() {
-        let result = generate_result("Hello, world","Error!",0);
+        let result = generate_result("Hello, world", "Error!", 0);
 
         assert!(!result.is_ok());
         assert!(result.is_err());

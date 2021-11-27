@@ -191,7 +191,7 @@ impl Client {
     ///     let client = piston_rs::Client::new();
     ///     let executor = piston_rs::Executor::new()
     ///         .set_language("rust")
-    ///         .set_version("1.56")
+    ///         .set_version("1.50.0")
     ///         .add_file(piston_rs::File::default().set_content(
     ///             "fn main() { println!(\"42\"); }",
     ///         ));
@@ -199,6 +199,7 @@ impl Client {
     ///     if let Ok(response) = client.execute(&executor).await {
     ///         assert!(response.compile.is_some());
     ///         assert!(response.run.is_ok());
+    ///         assert!(response.is_ok());
     ///     } else {
     ///         // There was an error contacting Piston.
     ///     }
@@ -206,17 +207,43 @@ impl Client {
     /// ```
     pub async fn execute(&self, executor: &Executor) -> Result<ExecutorResponse, Box<dyn Error>> {
         let endpoint = format!("{}/execute", self.url);
-        let result = self
+
+        match self
             .client
             .post(endpoint)
             .headers(self.headers.clone())
             .json::<Executor>(executor)
             .send()
-            .await?
-            .json::<ExecutorResponse>()
-            .await?;
+            .await
+        {
+            Ok(data) => match data.status() {
+                reqwest::StatusCode::OK => {
+                    Ok(data.json::<ExecutorResponse>().await?)
+                }
+                _ => {
+                    let exec_result = super::ExecutionResult {
+                        stdout: String::new(),
+                        stderr: String::new(),
+                        output: String::new(),
+                        code: 0,
+                        signal: None,
+                    };
 
-        Ok(result)
+                    let exec_response = super::ExecutorResponse {
+                        language: String::new(),
+                        version: String::new(),
+                        run: exec_result.clone(),
+                        compile: None,
+                        message: Some("Error: ".to_string() + &data.text().await?),
+                    };
+
+                    Ok(exec_response)
+                }
+            },
+            Err(e) => {
+                Err(Box::new(e))
+            }
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-//! `piston_rs` - A async wrapper for the
+//! `piston_rs` - An async wrapper for the
 //! [Piston](https://github.com/engineer-man/piston) code execution
 //! engine.
 //!
