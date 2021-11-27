@@ -4,9 +4,9 @@ mod client;
 mod executor;
 
 pub use client::Client;
+pub use executor::ExecutionResult;
 pub use executor::Executor;
 pub use executor::ExecutorResponse;
-pub use executor::ExecutionResult;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Runtime {
