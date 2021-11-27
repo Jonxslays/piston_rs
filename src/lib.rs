@@ -10,11 +10,9 @@
 //!
 //! ##### Make requests to Piston
 //!
-//! ```ignore
-//! // main.rs
-//!
-//! #[tokio::main]
-//! async fn main() {
+//! ```
+//! #[tokio::test]
+//! async fn example() {
 //!     let client = piston_rs::Client::new();
 //!     let executor = piston_rs::Executor::new()
 //!         .set_language("rust")
