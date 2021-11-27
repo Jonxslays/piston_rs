@@ -1,10 +1,11 @@
 [package]
 name = "piston_rs"
-description = "A Rust wrapper for accessing the Piston API."
+description = "An async wrapper for the Piston code execution engine."
 version = "0.1.0"
 edition = "2021"
 authors = ["Jonxslays"]
 readme = "README.md"
+license = "MIT"
 homepage = "https://github.com/Jonxslays/piston_rs"
 repository = "https://github.com/Jonxslays/piston_rs"
 keywords = ["piston-rs", "piston", "emkc", "code"]
