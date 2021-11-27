@@ -466,3 +466,42 @@ impl Executor {
         self
     }
 }
+
+#[cfg(test)]
+mod test_execution_result {
+    use super::ExecutionResult;
+
+    fn generate_result(stdout: &str, stderr: &str, code: isize) -> ExecutionResult {
+        ExecutionResult {
+            stdout: stdout.to_string(),
+            stderr: stderr.to_string(),
+            output: format!("{}\n{}", stdout, stderr),
+            code,
+            signal: None,
+        }
+    }
+
+    #[test]
+    fn test_is_ok() {
+        let result = generate_result("Hello, world","",0);
+
+        assert!(result.is_ok());
+        assert!(!result.is_err());
+    }
+
+    #[test]
+    fn test_is_err() {
+        let result = generate_result("","Error!",1);
+
+        assert!(!result.is_ok());
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_is_err_with_stdout() {
+        let result = generate_result("Hello, world","Error!",0);
+
+        assert!(!result.is_ok());
+        assert!(result.is_err());
+    }
+}
