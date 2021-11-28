@@ -18,16 +18,16 @@ pub struct ExecResult {
 }
 
 impl ExecResult {
-    /// [`true`] if there was no error in the execution result returned
-    /// by Piston.
+    /// [`true`] if there was a zero status code returned from
+    /// execution.
     pub fn is_ok(&self) -> bool {
-        self.stderr.is_empty()
+        self.code == 0
     }
 
-    /// [`true`] if there was an error in the execution result returned
-    /// by Piston.
+    /// [`true`] if there was a non zero status code returned from
+    /// execution.
     pub fn is_err(&self) -> bool {
-        !self.stderr.is_empty()
+        self.code != 0
     }
 }
 
@@ -43,21 +43,25 @@ pub struct ExecResponse {
     /// The optional result Piston sends detailing compilation. This
     /// will be [`None`] for non-compiled languages.
     pub compile: Option<ExecResult>,
-    /// The error message returned by Piston, if any.
-    pub message: Option<String>,
 }
 
 impl ExecResponse {
     /// [`true`] if the response from Piston did not contain an error
     /// message.
     pub fn is_ok(&self) -> bool {
-        self.message.is_none()
+        match &self.compile {
+            Some(c) => c.is_ok() && self.run.is_ok(),
+            None => self.run.is_ok(),
+        }
     }
 
     /// [`true`] if the response from Piston did contain an error
     /// message.
     pub fn is_err(&self) -> bool {
-        self.message.is_some()
+        match &self.compile {
+            Some(c) => c.is_err() || self.run.is_err(),
+            None => self.run.is_err(),
+        }
     }
 }
 
@@ -515,7 +519,7 @@ mod test_execution_result {
 
     #[test]
     fn test_is_err_with_stdout() {
-        let result = generate_result("Hello, world", "Error!", 0);
+        let result = generate_result("Hello, world", "Error!", 1);
 
         assert!(!result.is_ok());
         assert!(result.is_err());

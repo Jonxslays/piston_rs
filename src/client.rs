@@ -220,20 +220,21 @@ impl Client {
             Ok(data) => match data.status() {
                 reqwest::StatusCode::OK => Ok(data.json::<ExecResponse>().await?),
                 _ => {
+                    let text = format!("{}: {}", data.status(), data.text().await?);
+
                     let exec_result = ExecResult {
-                        stdout: String::new(),
-                        stderr: String::new(),
-                        output: String::new(),
-                        code: 0,
+                        stdout: text.clone(),
+                        stderr: text.clone(),
+                        output: text,
+                        code: 1,
                         signal: None,
                     };
 
                     let exec_response = ExecResponse {
-                        language: String::new(),
-                        version: String::new(),
-                        run: exec_result.clone(),
+                        language: executor.language.clone(),
+                        version: executor.version.clone(),
+                        run: exec_result,
                         compile: None,
-                        message: Some(format!("{}: {}", data.status(), data.text().await?)),
                     };
 
                     Ok(exec_response)

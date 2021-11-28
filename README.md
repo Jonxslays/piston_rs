@@ -43,23 +43,26 @@ async fn main() {
         .add_file(
             piston_rs::File::default()
                 .set_name("main.rs")
-                .set_content("fn main() { println!(\"42\"); }"),
+                .set_content("fn main() { println!(\"42\"); }")
         );
 
     match client.execute(&executor).await {
         Ok(response) => {
+            println!("Language: {}", response.language);
+            println!("Version: {}", response.version);
+
             if response.is_err() {
-                println!("{}", response.message.unwrap());
-            } else {
-                println!("Language: {}", response.language);
-                println!("Version: {}", response.version);
-                println!("Output:\n{}", response.run.output);
+                if let Some(c) = response.compile {
+                    println!("Compilation: {}", c.output);
+                }
             }
-        },
+
+            println!("Output: {}", response.run.output);
+        }
         Err(e) => {
             println!("Something went wrong contacting Piston.");
             println!("{}", e);
-        },
+        }
     }
 }
 ```
