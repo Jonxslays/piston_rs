@@ -8,7 +8,7 @@ use super::Executor;
 use super::Runtime;
 
 /// A client used to send requests to Piston.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Client {
     /// The base url for Piston.
     url: String,
