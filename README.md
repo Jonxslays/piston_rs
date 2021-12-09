@@ -26,7 +26,7 @@ For more details, check out the [documentation](https://docs.rs/piston_rs/latest
 # Cargo.toml
 
 [dependencies]
-piston_rs = "^0.2"
+piston_rs = "^0.3"
 ```
 
 ### Make requests to Piston
