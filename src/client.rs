@@ -62,6 +62,9 @@ impl Client {
 
     /// Creates a new client, with an api key.
     ///
+    /// # Arguments
+    /// - `key` - The api key to use.
+    ///
     /// # Returns
     /// - [`Client`] - The new Client.
     ///
@@ -180,6 +183,9 @@ impl Client {
 
     /// Executes code using a given executor. **This is an http
     /// request**.
+    ///
+    /// # Arguments
+    /// - `executor` - The executor to use.
     ///
     /// # Returns
     /// - [`Result<ExecutorResponse, Box<dyn Error>>`] - The response

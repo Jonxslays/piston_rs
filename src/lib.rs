@@ -137,11 +137,9 @@ impl File {
     /// Sets the content of the file.
     ///
     /// # Arguments
-    ///
     /// - `content` - The content to use.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -159,11 +157,9 @@ impl File {
     /// Sets the name of the file.
     ///
     /// # Arguments
-    ///
     /// - `name` - The name to use.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -181,12 +177,10 @@ impl File {
     /// Sets the encoding of the file.
     ///
     /// # Arguments
-    ///
     /// - `encoding` - The encoding to use. Must be one of "utf8",
     /// "hex", or "base64".
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example

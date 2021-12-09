@@ -18,14 +18,20 @@ pub struct ExecResult {
 }
 
 impl ExecResult {
-    /// [`true`] if there was a zero status code returned from
-    /// execution.
+    /// Whether or not the execution was ok.
+    ///
+    /// # Returns
+    /// - [`bool`] - [`true`] if the execution returned a zero exit
+    /// code.
     pub fn is_ok(&self) -> bool {
         self.code == 0
     }
 
-    /// [`true`] if there was a non zero status code returned from
-    /// execution.
+    /// Whether or not the execution produced errors.
+    ///
+    /// # Returns
+    /// - [`bool`] - [`true`] if the execution returned a non zero exit
+    /// code.
     pub fn is_err(&self) -> bool {
         self.code != 0
     }
@@ -46,8 +52,10 @@ pub struct ExecResponse {
 }
 
 impl ExecResponse {
-    /// [`true`] if the response from Piston did not contain an error
-    /// message.
+    /// Whether or not the request to Piston succeeded.
+    ///
+    /// # Returns
+    /// - [`bool`] - [`true`] if a 200 status code was received from Piston.
     pub fn is_ok(&self) -> bool {
         match &self.compile {
             Some(c) => c.is_ok() && self.run.is_ok(),
@@ -55,8 +63,10 @@ impl ExecResponse {
         }
     }
 
-    /// [`true`] if the response from Piston did contain an error
-    /// message.
+    /// Whether or not the request to Piston failed.
+    ///
+    /// # Returns
+    /// - [`bool`] - [`true`] if a non 200 status code was received from Piston.
     pub fn is_err(&self) -> bool {
         match &self.compile {
             Some(c) => c.is_err() || self.run.is_err(),
@@ -74,8 +84,8 @@ pub struct Executor {
     /// **Required** - The language to use for execution. Defaults to a
     /// new `String`.
     pub language: String,
-    /// **Required** - The version of the language to use for execution.
-    /// Defaults to a new `String`.
+    /// The version of the language to use for execution.
+    /// Defaults to "*" (*most recent version*).
     pub version: String,
     /// **Required** - A `Vector` of `File`'s to send to Piston. The
     /// first file in the vector is considered the main file. Defaults
@@ -112,6 +122,7 @@ impl Default for Executor {
     /// let executor = piston_rs::Executor::default();
     ///
     /// assert_eq!(executor.language, String::new());
+    /// assert_eq!(executor.version, String::from("*"));
     /// ```
     fn default() -> Self {
         Self::new()
@@ -122,8 +133,9 @@ impl Executor {
     /// Creates a new executor representing source code to be
     /// executed.
     ///
-    /// Metadata regarding the source language, code, version etc will
-    /// need to be added using the associated method calls.
+    /// Metadata regarding the source language and files will
+    /// need to be added using the associated method calls, and other
+    /// optional fields can be set as well.
     ///
     /// # Returns
     /// - [`Executor`] - The new blank Executor.
@@ -133,11 +145,12 @@ impl Executor {
     /// let executor = piston_rs::Executor::new();
     ///
     /// assert_eq!(executor.language, String::new());
+    /// assert_eq!(executor.version, String::from("*"));
     /// ```
     pub fn new() -> Self {
         Self {
             language: String::new(),
-            version: String::new(),
+            version: String::from("*"),
             files: vec![],
             stdin: String::new(),
             args: vec![],
@@ -165,7 +178,7 @@ impl Executor {
     /// ```
     pub fn reset(&mut self) {
         self.language = String::new();
-        self.version = String::new();
+        self.version = String::from("*");
         self.files = vec![];
         self.stdin = String::new();
         self.args = vec![];
@@ -178,11 +191,9 @@ impl Executor {
     /// Sets the language to use for execution.
     ///
     /// # Arguments
-    ///
     /// - `language` - The language to use.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -200,11 +211,9 @@ impl Executor {
     /// Sets the version of the language to use for execution.
     ///
     /// # Arguments
-    ///
     /// - `version` - The version to use.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -223,11 +232,9 @@ impl Executor {
     /// overwrite any existing files.
     ///
     /// # Arguments
-    ///
     /// - `file` - The file to add.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -248,11 +255,9 @@ impl Executor {
     /// Does not overwrite any existing files.
     ///
     /// # Arguments
-    ///
     /// - `files` - The files to add.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -278,7 +283,6 @@ impl Executor {
     /// executor in place. **Overwrites any existing files.**
     ///
     /// # Arguments
-    ///
     /// - `files` - The files to replace existing files with.
     ///
     /// # Example
@@ -310,11 +314,9 @@ impl Executor {
     /// Sets the text to pass as `stdin` to the program.
     ///
     /// # Arguments
-    ///
     /// - `stdin` - The text to set.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -333,11 +335,9 @@ impl Executor {
     /// overwrite any existing args.
     ///
     /// # Arguments
-    ///
     /// - `arg` - The arg to add.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -356,7 +356,6 @@ impl Executor {
     /// Does not overwrite any existing args.
     ///
     /// # Arguments
-    ///
     /// - `args` - The args to add.
     ///
     /// # Example
@@ -376,7 +375,6 @@ impl Executor {
     /// executor in place. **Overwrites any existing args.**
     ///
     /// # Arguments
-    ///
     /// - `args` - The args to replace existing args with.
     ///
     /// # Example
@@ -401,11 +399,9 @@ impl Executor {
     /// Sets the maximum allowed time for compilation in milliseconds.
     ///
     /// # Arguments
-    ///
     /// - `timeout` - The timeout to set.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -423,11 +419,9 @@ impl Executor {
     /// Sets the maximum allowed time for execution in milliseconds.
     ///
     /// # Arguments
-    ///
     /// - `timeout` - The timeout to set.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -445,11 +439,9 @@ impl Executor {
     /// Sets the maximum allowed memory usage for compilation in bytes.
     ///
     /// # Arguments
-    ///
     /// - `limit` - The memory limit to set.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
@@ -467,11 +459,9 @@ impl Executor {
     /// Sets the maximum allowed memory usage for execution in bytes.
     ///
     /// # Arguments
-    ///
     /// - `limit` - The memory limit to set.
     ///
     /// # Returns
-    ///
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
