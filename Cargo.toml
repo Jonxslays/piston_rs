@@ -16,8 +16,12 @@ categories = ["api-bindings", "asynchronous"]
 name = "piston_rs"
 
 [dependencies]
-reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
+
+[dependencies.reqwest]
+version = "0.11"
+default-features = false
+features = ["json", "rustls-tls"]
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros"] }

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - test-rustls
   pull_request:
 
 jobs:
