@@ -1,7 +1,11 @@
-# piston_rs
+<h1 align="center">piston_rs</h1>
+<p align="center">
+<a href="https://crates.io/crates/piston_rs"><img height="20" alt="Crate" src="https://img.shields.io/crates/v/piston_rs"></a>
+<a href="https://crates.io/crates/piston_rs"><img height="20" alt="Docs" src="https://img.shields.io/docsrs/piston_rs"></a>
+<a href="https://github.com/Jonxslays/piston_rs/actions/workflows/ci.yml"><img height="20" alt="Build" src="https://img.shields.io/github/workflow/status/Jonxslays/piston_rs/CI"></a>
+</p>
 
-An async wrapper for the [Piston](https://github.com/engineer-man/piston)
-code execution engine.
+<p align="center">An async wrapper for the <a href="https://github.com/engineer-man/piston">Piston</a> code execution engine.</p>
 
 ## Why piston_rs
 
