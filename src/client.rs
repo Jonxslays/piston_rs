@@ -223,27 +223,32 @@ impl Client {
             .send()
             .await
         {
-            Ok(data) => match data.status() {
-                reqwest::StatusCode::OK => Ok(data.json::<ExecResponse>().await?),
-                _ => {
-                    let text = format!("{}: {}", data.status(), data.text().await?);
+            Ok(data) => {
+                let status = data.status();
 
-                    let exec_result = ExecResult {
-                        stdout: text.clone(),
-                        stderr: text.clone(),
-                        output: text,
-                        code: 1,
-                        signal: None,
-                    };
+                match status {
+                    reqwest::StatusCode::OK => Ok(data.json::<ExecResponse>().await?),
+                    _ => {
+                        let text = format!("{}: {}", data.status(), data.text().await?);
 
-                    let exec_response = ExecResponse {
-                        language: executor.language.clone(),
-                        version: executor.version.clone(),
-                        run: exec_result,
-                        compile: None,
-                    };
+                        let exec_result = ExecResult {
+                            stdout: String::new(),
+                            stderr: text.clone(),
+                            output: text,
+                            code: 1,
+                            signal: None,
+                        };
 
-                    Ok(exec_response)
+                        let exec_response = ExecResponse {
+                            language: executor.language.clone(),
+                            version: executor.version.clone(),
+                            run: exec_result,
+                            compile: None,
+                            status: status.as_u16(),
+                        };
+
+                        Ok(exec_response)
+                    }
                 }
             },
             Err(e) => Err(Box::new(e)),

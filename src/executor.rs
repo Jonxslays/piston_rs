@@ -49,6 +49,8 @@ pub struct ExecResponse {
     /// The optional result Piston sends detailing compilation. This
     /// will be [`None`] for non-compiled languages.
     pub compile: Option<ExecResult>,
+    /// The response status returned by Piston.
+    pub status: u16,
 }
 
 impl ExecResponse {
@@ -57,10 +59,7 @@ impl ExecResponse {
     /// # Returns
     /// - [`bool`] - [`true`] if a 200 status code was received from Piston.
     pub fn is_ok(&self) -> bool {
-        match &self.compile {
-            Some(c) => c.is_ok() && self.run.is_ok(),
-            None => self.run.is_ok(),
-        }
+        self.status == 200
     }
 
     /// Whether or not the request to Piston failed.
@@ -68,10 +67,7 @@ impl ExecResponse {
     /// # Returns
     /// - [`bool`] - [`true`] if a non 200 status code was received from Piston.
     pub fn is_err(&self) -> bool {
-        match &self.compile {
-            Some(c) => c.is_err() || self.run.is_err(),
-            None => self.run.is_err(),
-        }
+        self.status != 200
     }
 }
 
@@ -479,8 +475,10 @@ impl Executor {
 
 #[cfg(test)]
 mod test_execution_result {
+    use super::ExecResponse;
     use super::ExecResult;
 
+    /// Generates an ExecResult for testing
     fn generate_result(stdout: &str, stderr: &str, code: isize) -> ExecResult {
         ExecResult {
             stdout: stdout.to_string(),
@@ -491,8 +489,35 @@ mod test_execution_result {
         }
     }
 
+    /// Generates an ExecResponse for testing.
+    fn generate_response(status: u16) -> ExecResponse {
+        ExecResponse {
+            language: "rust".to_string(),
+            version: "1.50.0".to_string(),
+            run: generate_result("Be unique.", "", 0),
+            compile: None,
+            status,
+        }
+    }
+
     #[test]
-    fn test_is_ok() {
+    fn test_response_is_ok() {
+        let response = generate_response(200);
+
+        assert!(response.is_ok());
+        assert!(!response.is_err());
+    }
+
+    #[test]
+    fn test_response_is_err() {
+        let response = generate_response(400);
+
+        assert!(!response.is_ok());
+        assert!(response.is_err());
+    }
+
+    #[test]
+    fn test_result_is_ok() {
         let result = generate_result("Hello, world", "", 0);
 
         assert!(result.is_ok());
@@ -500,7 +525,7 @@ mod test_execution_result {
     }
 
     #[test]
-    fn test_is_err() {
+    fn test_result_is_err() {
         let result = generate_result("", "Error!", 1);
 
         assert!(!result.is_ok());
