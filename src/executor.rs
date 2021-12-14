@@ -37,6 +37,21 @@ impl ExecResult {
     }
 }
 
+/// Raw response received from Piston
+#[doc(hidden)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct RawExecResponse {
+    /// The language that was used.
+    pub language: String,
+    /// The version of the language that was used.
+    pub version: String,
+    /// The result Piston sends detailing execution.
+    pub run: ExecResult,
+    /// The optional result Piston sends detailing compilation. This
+    /// will be [`None`] for non-compiled languages.
+    pub compile: Option<ExecResult>,
+}
+
 /// A response returned by Piston when executing code.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ExecResponse {
