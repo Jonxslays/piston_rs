@@ -2,6 +2,7 @@ use std::error::Error;
 
 use reqwest::header::{HeaderMap, HeaderValue};
 
+use super::executor::RawExecResponse;
 use super::ExecResponse;
 use super::ExecResult;
 use super::Executor;
@@ -227,7 +228,17 @@ impl Client {
                 let status = data.status();
 
                 match status {
-                    reqwest::StatusCode::OK => Ok(data.json::<ExecResponse>().await?),
+                    reqwest::StatusCode::OK => {
+                        let response = data.json::<RawExecResponse>().await?;
+
+                        Ok(ExecResponse {
+                            language: response.language,
+                            version: response.version,
+                            run: response.run,
+                            compile: response.compile,
+                            status: status.as_u16(),
+                        })
+                    }
                     _ => {
                         let text = format!("{}: {}", data.status(), data.text().await?);
 
@@ -250,7 +261,7 @@ impl Client {
                         Ok(exec_response)
                     }
                 }
-            },
+            }
             Err(e) => Err(Box::new(e)),
         }
     }
