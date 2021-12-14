@@ -55,10 +55,8 @@ async fn main() {
             println!("Language: {}", response.language);
             println!("Version: {}", response.version);
 
-            if response.is_err() {
-                if let Some(c) = response.compile {
-                    println!("Compilation: {}", c.output);
-                }
+            if let Some(c) = response.compile {
+                println!("Compilation: {}", c.output);
             }
 
             println!("Output: {}", response.run.output);
