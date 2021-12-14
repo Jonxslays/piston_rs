@@ -1,0 +1,6 @@
+branch: true
+ignore-not-existing: true
+llvm: true
+filter: covered
+output-type: html
+output-path: ./target/debug/coverage
