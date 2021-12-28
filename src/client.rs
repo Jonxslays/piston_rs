@@ -61,6 +61,29 @@ impl Client {
         }
     }
 
+    /// Creates a new Client with a url that runs the piston code execution engine.
+    ///
+    /// This makes it possible to interact with a self-hosted instance of piston.
+    ///
+    /// # Arguments
+    /// - `url` - The url to use as the underlying piston backend.
+    ///
+    /// # Returns
+    /// - [`Client`] - The new Client.
+    ///
+    /// # Example
+    /// ```
+    /// let client = piston_rs::Client::with_url("http://localhost:3000");
+    /// assert_eq!(client.get_url(), "http://localhost:3000");
+    /// ```
+    pub fn with_url(url: &str) -> Self {
+        Self {
+            url: url.to_string(),
+            client: reqwest::Client::new(),
+            headers: Self::generate_headers(None),
+        }
+    }
+
     /// Creates a new client, with an api key.
     ///
     /// # Arguments
@@ -84,7 +107,31 @@ impl Client {
         }
     }
 
-    /// The base url for the Piston V2 API.
+    /// Creates a new Client using a url and an api key.
+    ///
+    /// # Arguments
+    /// - `url` - The url to use as the underlying piston backend.
+    /// - `key` - The api key to use.
+    ///
+    /// # Returns
+    /// - [`Client`] - The new Client.
+    ///
+    /// # Example
+    /// ```
+    /// let client = piston_rs::Client::with_url_and_key("http://localhost:3000", "123abc");
+    /// assert_eq!(client.get_url(), "http://localhost:3000");
+    /// assert!(client.get_headers().contains_key("Authorization"));
+    /// assert_eq!(client.get_headers().get("Authorization").unwrap(), "123abc");
+    /// ```
+    pub fn with_url_and_key(url: &str, key: &str) -> Self {
+        Self {
+            url: url.to_string(),
+            client: reqwest::Client::new(),
+            headers: Self::generate_headers(Some(key)),
+        }
+    }
+
+    /// The base url for the Piston V2 API that is being used by this client.
     ///
     /// # Returns
     ///
