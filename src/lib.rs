@@ -46,8 +46,8 @@
 
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::path::{Path, PathBuf};
 use std::process;
-use std::path::PathBuf;
 
 mod client;
 mod executor;
@@ -175,7 +175,7 @@ impl File {
         }
     }
 
-    fn load_contents(path: &PathBuf) -> String {
+    fn load_contents(path: &Path) -> String {
         match fs::read_to_string(&path) {
             Ok(c) => c,
             Err(e) => {
@@ -266,5 +266,19 @@ impl File {
     pub fn set_encoding(mut self, encoding: &str) -> Self {
         self.encoding = encoding.to_string();
         self
+    }
+}
+
+#[cfg(test)]
+mod test_file_private {
+    use super::File;
+    use std::path::PathBuf;
+
+    #[test]
+    fn test_load_contents() {
+        let path = PathBuf::from(file!());
+        let contents = File::load_contents(&path);
+
+        assert!(contents.contains("mod test_file_private {"));
     }
 }
