@@ -47,7 +47,6 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::process;
 
 mod client;
 mod executor;
@@ -102,9 +101,9 @@ impl Default for File {
     /// ```
     fn default() -> Self {
         Self {
-            name: "".to_string(),
-            content: "".to_string(),
-            encoding: "utf8".to_string(),
+            name: String::from(""),
+            content: String::from(""),
+            encoding: String::from("utf8"),
         }
     }
 }
@@ -160,18 +159,23 @@ impl File {
     pub fn load_from(path: &str) -> Self {
         let path = PathBuf::from(path);
 
+        if !path.is_file() {
+            println!("File does not exist, or is a directory -- using defaults");
+            return File::default();
+        }
+
         let name = match path.file_name() {
             Some(n) => n.to_str().unwrap_or("Invalid file name"),
             None => {
-                println!("Invalid path name");
-                process::exit(1);
+                println!("Invalid file name");
+                ""
             }
         };
 
         Self {
             name: name.to_string(),
             content: File::load_contents(&path),
-            encoding: "utf8".to_string(),
+            encoding: String::from("utf8"),
         }
     }
 
@@ -180,7 +184,7 @@ impl File {
             Ok(c) => c,
             Err(e) => {
                 println!("{}", e);
-                process::exit(1);
+                String::from("")
             }
         }
     }
@@ -280,5 +284,13 @@ mod test_file_private {
         let contents = File::load_contents(&path);
 
         assert!(contents.contains("mod test_file_private {"));
+    }
+
+    #[test]
+    fn test_load_contents_non_existent() {
+        let path = PathBuf::from("/path/doesnt/exist");
+        let contents = File::load_contents(&path);
+
+        assert_eq!(contents, String::from(""))
     }
 }
