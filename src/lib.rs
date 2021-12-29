@@ -101,8 +101,8 @@ impl Default for File {
     /// ```
     fn default() -> Self {
         Self {
-            name: String::from(""),
-            content: String::from(""),
+            name: String::new(),
+            content: String::new(),
             encoding: String::from("utf8"),
         }
     }
@@ -149,11 +149,11 @@ impl File {
     /// - [`File`] - The new File.
     ///
     /// # Example
-    /// ```no_run
-    /// let file = piston_rs::File::load_from("path/to/script.sh");
+    /// ```
+    /// let file = piston_rs::File::load_from("src/lib.rs");
     ///
-    /// assert!(file.content.contains("<contents of file>"));
-    /// assert_eq!(file.name, "script.sh".to_string());
+    /// assert!(file.content.contains("pub fn load_from"));
+    /// assert_eq!(file.name, "lib.rs".to_string());
     /// assert_eq!(file.encoding, "utf8".to_string());
     /// ```
     pub fn load_from(path: &str) -> Self {
@@ -184,7 +184,7 @@ impl File {
             Ok(c) => c,
             Err(e) => {
                 println!("{}", e);
-                String::from("")
+                String::new()
             }
         }
     }
@@ -219,11 +219,11 @@ impl File {
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
-    /// ```no_run
+    /// ```
     /// let file = piston_rs::File::default()
-    ///     .load_contents_from("path/to/script.sh");
+    ///     .load_contents_from("src/lib.rs");
     ///
-    /// assert!(file.content.contains("<contents of file>"));
+    /// assert!(file.content.contains("pub fn load_contents_from"));
     /// ```
     pub fn load_contents_from(mut self, path: &str) -> Self {
         let path = PathBuf::from(path);
@@ -291,6 +291,6 @@ mod test_file_private {
         let path = PathBuf::from("/path/doesnt/exist");
         let contents = File::load_contents(&path);
 
-        assert_eq!(contents, String::from(""))
+        assert_eq!(contents, String::new())
     }
 }
