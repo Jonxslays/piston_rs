@@ -112,6 +112,12 @@ impl Default for File {
 impl File {
     /// Creates a new [`File`].
     ///
+    /// # Arguments
+    /// - `name` - The name to use.
+    /// - `content` - The content to use.
+    /// - `encoding` - The encoding to use. Must be one of "utf8",
+    /// "hex", or "base64".
+    ///
     /// # Returns
     /// - [`File`] - The new File.
     ///
@@ -136,6 +142,9 @@ impl File {
     }
 
     /// Creates a new [`File`] from an existing file on disk.
+    ///
+    /// # Arguments
+    /// - `path` - The path to the file.
     ///
     /// # Returns
     /// - [`File`] - The new File.
@@ -206,11 +215,11 @@ impl File {
     /// - [`Self`] - For chained method calls.
     ///
     /// # Example
-    /// ```
+    /// ```no_run
     /// let file = piston_rs::File::default()
-    ///     .set_content("print(\"Hello, world!\")");
+    ///     .load_contents_from("path/to/script.sh");
     ///
-    /// assert_eq!(file.content, "print(\"Hello, world!\")".to_string());
+    /// assert!(file.content.contains("<contents of file>"));
     /// ```
     pub fn load_contents_from(mut self, path: &str) -> Self {
         let path = PathBuf::from(path);
