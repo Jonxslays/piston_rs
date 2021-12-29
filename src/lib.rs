@@ -45,6 +45,9 @@
 // RIP shrimpie, gone but not forgotten.
 
 use serde::{Deserialize, Serialize};
+use std::fs;
+use std::process;
+use std::path::PathBuf;
 
 mod client;
 mod executor;
@@ -132,6 +135,47 @@ impl File {
         }
     }
 
+    /// Creates a new [`File`] from an existing file on disk.
+    ///
+    /// # Returns
+    /// - [`File`] - The new File.
+    ///
+    /// # Example
+    /// ```no_run
+    /// let file = piston_rs::File::load_from("path/to/script.sh");
+    ///
+    /// assert!(file.content.contains("<contents of file>"));
+    /// assert_eq!(file.name, "script.sh".to_string());
+    /// assert_eq!(file.encoding, "utf8".to_string());
+    /// ```
+    pub fn load_from(path: &str) -> Self {
+        let path = PathBuf::from(path);
+
+        let name = match path.file_name() {
+            Some(n) => n.to_str().unwrap_or("Invalid file name"),
+            None => {
+                println!("Invalid path name");
+                process::exit(1);
+            }
+        };
+
+        Self {
+            name: name.to_string(),
+            content: File::load_contents(&path),
+            encoding: "utf8".to_string(),
+        }
+    }
+
+    fn load_contents(path: &PathBuf) -> String {
+        match fs::read_to_string(&path) {
+            Ok(c) => c,
+            Err(e) => {
+                println!("{}", e);
+                process::exit(1);
+            }
+        }
+    }
+
     /// Sets the content of the file.
     ///
     /// # Arguments
@@ -149,6 +193,28 @@ impl File {
     /// ```
     pub fn set_content(mut self, content: &str) -> Self {
         self.content = content.to_string();
+        self
+    }
+
+    /// Sets the content of the file to the contents of an existing
+    /// file on disk.
+    ///
+    /// # Arguments
+    /// - `path` - The path to the file.
+    ///
+    /// # Returns
+    /// - [`Self`] - For chained method calls.
+    ///
+    /// # Example
+    /// ```
+    /// let file = piston_rs::File::default()
+    ///     .set_content("print(\"Hello, world!\")");
+    ///
+    /// assert_eq!(file.content, "print(\"Hello, world!\")".to_string());
+    /// ```
+    pub fn load_contents_from(mut self, path: &str) -> Self {
+        let path = PathBuf::from(path);
+        self.content = File::load_contents(&path);
         self
     }
 
