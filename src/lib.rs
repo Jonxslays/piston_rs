@@ -216,6 +216,20 @@ impl File {
         })
     }
 
+    /// Loads the contents of the given file.
+    ///
+    /// # Arguments
+    /// - `path` - The path to the file.
+    ///
+    /// # Returns
+    /// - [`String`] - The file's contents.
+    ///
+    /// # Example
+    /// ```ignore # Fails to compile (private function)
+    /// let content = piston_rs::File::load_contents("src/lib.rs").unwrap();
+    ///
+    /// assert!(content.contains("fn load_contents"));
+    /// ```
     fn load_contents(path: &Path) -> LoadResult<String> {
         match fs::read_to_string(path) {
             Ok(content) => Ok(content),
@@ -256,10 +270,10 @@ impl File {
     /// # Example
     /// ```
     /// let file = piston_rs::File::default()
-    ///     .load_contents_from("src/lib.rs");
+    ///     .load_content_from("src/lib.rs");
     ///
     /// assert!(file.is_ok());
-    /// assert!(file.unwrap().content.contains("pub fn load_contents_from"));
+    /// assert!(file.unwrap().content.contains("pub fn load_content_from"));
     /// ```
     pub fn load_content_from(mut self, path: &str) -> LoadResult<Self> {
         let path = PathBuf::from(path);
