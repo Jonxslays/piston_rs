@@ -346,9 +346,13 @@ mod test_file_private {
 
         assert!(contents.is_err());
         let err = contents.unwrap_err();
+        let expd_err = match cfg!(windows) {
+            true => String::from("The system cannot find the path specified. (os error 3)"),
+            false => String::from("No such file or directory (os error 2)"),
+        };
 
-        assert!(err.details.contains("No such file"));
-        assert!(format!("{}", err).contains("No such file"));
+        assert_eq!(err.details, expd_err);
+        assert_eq!(format!("{}", err), expd_err);
 
         let err2 = err.clone();
         assert_eq!(err.details, err2.details);
