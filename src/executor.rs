@@ -214,6 +214,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.language, "rust".to_string());
     /// ```
+    #[must_use]
     pub fn set_language(mut self, language: &str) -> Self {
         self.language = language.to_lowercase();
         self
@@ -234,6 +235,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.version, "1.50.0".to_string());
     /// ```
+    #[must_use]
     pub fn set_version(mut self, version: &str) -> Self {
         self.version = version.to_string();
         self
@@ -257,6 +259,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.files, [file].to_vec());
     /// ```
+    #[must_use]
     pub fn add_file(mut self, file: File) -> Self {
         self.files.push(file);
         self
@@ -284,6 +287,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.files, files);
     /// ```
+    #[must_use]
     pub fn add_files(mut self, files: Vec<File>) -> Self {
         self.files.extend(files);
         self
@@ -337,6 +341,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.stdin, "Fearless concurrency".to_string());
     /// ```
+    #[must_use]
     pub fn set_stdin(mut self, stdin: &str) -> Self {
         self.stdin = stdin.to_string();
         self
@@ -358,6 +363,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.args, vec!["--verbose".to_string()]);
     /// ```
+    #[must_use]
     pub fn add_arg(mut self, arg: &str) -> Self {
         self.args.push(arg.to_string());
         self
@@ -376,6 +382,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.args, vec!["--verbose".to_string()]);
     /// ```
+    #[must_use]
     pub fn add_args(mut self, args: Vec<&str>) -> Self {
         self.args.extend(args.iter().map(|a| a.to_string()));
         self
@@ -422,6 +429,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.compile_timeout, 5000);
     /// ```
+    #[must_use]
     pub fn set_compile_timeout(mut self, timeout: isize) -> Self {
         self.compile_timeout = timeout;
         self
@@ -442,6 +450,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.run_timeout, 1500);
     /// ```
+    #[must_use]
     pub fn set_run_timeout(mut self, timeout: isize) -> Self {
         self.run_timeout = timeout;
         self
@@ -462,6 +471,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.compile_memory_limit, 100_000_000);
     /// ```
+    #[must_use]
     pub fn set_compile_memory_limit(mut self, limit: isize) -> Self {
         self.compile_memory_limit = limit;
         self
@@ -482,6 +492,7 @@ impl Executor {
     ///
     /// assert_eq!(executor.run_memory_limit, 100_000_000);
     /// ```
+    #[must_use]
     pub fn set_run_memory_limit(mut self, limit: isize) -> Self {
         self.run_memory_limit = limit;
         self
