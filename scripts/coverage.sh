@@ -7,7 +7,7 @@ should_continue() {
 
     case $VALIDATOR in
         "y"|"Y"|"yes"|"Yes") echo;;
-        "n"|"N"|"no"|"No") echo;echo "Rust nightly not installed, exiting..."; exit 1;;
+        "n"|"N"|"no"|"No") echo; echo "Rust nightly not installed, exiting..."; exit 1;;
         *) echo "Invalid input..."; should_continue;;
     esac
 }
