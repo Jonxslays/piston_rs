@@ -293,7 +293,7 @@ impl Client {
                             stdout: String::new(),
                             stderr: text.clone(),
                             output: text,
-                            code: 1,
+                            code: Some(1),
                             signal: None,
                         };
 
