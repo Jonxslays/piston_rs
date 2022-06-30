@@ -11,8 +11,8 @@ pub struct ExecResult {
     pub stderr: String,
     /// The text sent to both `stdout`, and `stderr` during execution.
     pub output: String,
-    /// The exit code returned by the process.
-    pub code: isize,
+    /// The optional exit code returned by the process.
+    pub code: Option<isize>,
     /// The optional signal sent to the process. (`SIGKILL` etc)
     pub signal: Option<String>,
 }
@@ -24,7 +24,7 @@ impl ExecResult {
     /// - [`bool`] - [`true`] if the execution returned a zero exit
     /// code.
     pub fn is_ok(&self) -> bool {
-        self.code == 0
+        self.code.is_some() && self.code.unwrap() == 0
     }
 
     /// Whether or not the execution produced errors.
@@ -33,7 +33,7 @@ impl ExecResult {
     /// - [`bool`] - [`true`] if the execution returned a non zero exit
     /// code.
     pub fn is_err(&self) -> bool {
-        self.code != 0
+        self.code.is_some() && self.code.unwrap() != 0
     }
 }
 
@@ -510,7 +510,7 @@ mod test_execution_result {
             stdout: stdout.to_string(),
             stderr: stderr.to_string(),
             output: format!("{}\n{}", stdout, stderr),
-            code,
+            code: Some(code),
             signal: None,
         }
     }
