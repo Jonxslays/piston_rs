@@ -33,7 +33,7 @@ impl ExecResult {
     /// - [`bool`] - [`true`] if the execution returned a non zero exit
     /// code.
     pub fn is_err(&self) -> bool {
-        self.code.is_some() && self.code.unwrap() == 0
+        self.code.is_some() && self.code.unwrap() != 0
     }
 }
 
