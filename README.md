@@ -2,7 +2,7 @@
 <p align="center">
 <a href="https://crates.io/crates/piston_rs"><img height="20" alt="Crate" src="https://img.shields.io/crates/v/piston_rs"></a>
 <a href="https://crates.io/crates/piston_rs"><img height="20" alt="Docs" src="https://img.shields.io/docsrs/piston_rs"></a>
-<a href="https://github.com/Jonxslays/piston_rs/actions/workflows/ci.yml"><img height="20" alt="Build" src="https://img.shields.io/github/workflow/status/Jonxslays/piston_rs/CI"></a>
+<a href="https://github.com/Jonxslays/piston_rs/actions/workflows/ci.yml"><img height="20" alt="Build" src="https://img.shields.io/github/actions/workflow/status/Jonxslays/piston_rs/ci.yml?branch=master"></a>
 </p>
 
 <p align="center">An async wrapper for the <a href="https://github.com/engineer-man/piston">Piston</a> code execution engine.</p>
