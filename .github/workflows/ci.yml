@@ -39,30 +39,13 @@ jobs:
         with:
           toolchain: nightly
           override: true
+          components: llvm-tools-preview
 
-      - name: Run tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --all-features --no-fail-fast
-        env:
-          CARGO_INCREMENTAL: "0"
-          RUSTFLAGS: "-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests"
-          RUSTDOCFLAGS: "-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests"
+      - name: Install grcov
+        run: cargo install grcov
 
-      - name: Generate coverage report
-        uses: actions-rs/grcov@v0.1
-
-      - name: Verify coverage >= 80%
-        run: |
-          COVERAGE=$(grep -oP "message\":\"\K(\d+)" ./target/debug/coverage/coverage.json);
-          if [ $COVERAGE -lt 80 ]; then
-            echo "Coverage failing with: $COVERAGE%";
-            exit 1;
-          else
-            echo "Coverage passing with: $COVERAGE%";
-            exit 0;
-          fi
+      - name: Run coverage report
+        run: ./scripts/coverage.sh
 
   test-and-build:
     name: Test and build
