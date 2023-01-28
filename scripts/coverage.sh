@@ -63,7 +63,7 @@ rustup default $(awk '{print $1}' <<< $ACTIVE_TOOLCHAIN)
 echo "Done!"
 echo
 
-COVERAGE=$(grep -oP "message\":\"\K(\d+%)" target/debug/coverage/coverage.json)
+COVERAGE=$(grep -oP "message\":\"\K(\d+)" target/debug/coverage/coverage.json)
 if [ $COVERAGE -lt 80 ]; then
     echo "Coverage failing with: $COVERAGE%";
     exit 1;

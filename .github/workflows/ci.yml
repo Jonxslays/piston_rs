@@ -40,18 +40,9 @@ jobs:
         with:
           toolchain: nightly
           override: true
+          components: llvm-tools-preview
 
-      # - name: Run tests
-      #   uses: actions-rs/cargo@v1
-      #   with:
-      #     command: test
-      #     args: --all-features --no-fail-fast
-      #   env:
-      #     CARGO_INCREMENTAL: "0"
-      #     RUSTFLAGS: "-Cinstrument-coverage"
-      #     RUSTDOCFLAGS: "-Cinstrument-coverage -Zunstable-options --persist-doctests target/debug/doctestbins"
-
-      - name: Instal grcov
+      - name: Install grcov
         run: cargo install grcov
 
       - name: Run coverage report
