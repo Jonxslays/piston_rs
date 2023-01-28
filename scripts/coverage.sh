@@ -27,7 +27,7 @@ if [ ! $(grep -o "nightly" <<< $ACTIVE_TOOLCHAIN) ]; then
     rustup default nightly
 fi
 
-if [ ! $(rustup component list | grep -o "llvm-tools-preview") ]; then
+if [ ! $(rustup component list | grep -o "llvm-tools") ]; then
     echo "Could not find llvm-tools, installing..."
     rustup component add llvm-tools-preview
 else
