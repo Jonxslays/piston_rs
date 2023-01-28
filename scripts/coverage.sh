@@ -1,6 +1,11 @@
-#! /bin/bash
+#!/bin/bash
 
-echo "Running coverage report..."
+# Make sure grcov is installed
+which grcov &> /dev/null
+if [ $? != 0 ]; then
+    echo "grcov is not installed, please install it with \`cargo install grcov\`."
+    exit 1
+fi
 
 should_continue() {
     read -p "Coverage report requires Rust nightly, install now? [y/n]: " VALIDATOR
@@ -31,23 +36,27 @@ fi
 
 echo "Setting up environment..."
 export CARGO_INCREMENTAL=0
-export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests"
-export RUSTDOCFLAGS="-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests"
+export RUSTFLAGS="-Cinstrument-coverage"
+export RUSTDOCFLAGS="-Cinstrument-coverage -Zunstable-options --persist-doctests target/debug/doctestbins"
 export LLVM_PROFILE_FILE="piston_rs-%p-%m.profraw"
-
-echo "Building..."
-cargo build
 
 echo "Running tests..."
 cargo test
 
-echo "Generating coverage..."
-grcov . -s . --binary-path ./target/debug/ -t html --branch --ignore-not-existing -o ./target/debug/coverage/
+echo "Generating coverage report..."
+grcov . -s . -t html -o ./target/debug/coverage/ \
+    --binary-path ./target/debug/ \
+    --ignore-not-existing \
+    --branch \
+    --excl-br-line "#\[derive\(" \
+    --excl-line "#\[derive\("
 
+echo
 echo "Cleaning up..."
-rm -rf target/debug/deps/*.gcda
-rm -rf target/debug/deps/*.gcno
+rm -f ./*.profraw
+rm -rf ./target/debug/doctestbins
 
+echo
 echo "Reverting to previous default toolchain..."
 rustup default $(awk '{print $1}' <<< $ACTIVE_TOOLCHAIN)
 

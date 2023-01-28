@@ -4,3 +4,5 @@ llvm: true
 filter: covered
 output-type: html
 output-path: ./target/debug/coverage
+excl-br-line: "#\[derive\("
+excl-line: "#\[derive\("

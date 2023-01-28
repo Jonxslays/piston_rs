@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - task/coverage-fix
   pull_request:
 
 jobs:
@@ -47,8 +48,8 @@ jobs:
           args: --all-features --no-fail-fast
         env:
           CARGO_INCREMENTAL: "0"
-          RUSTFLAGS: "-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests"
-          RUSTDOCFLAGS: "-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests"
+          RUSTFLAGS: "-Cinstrument-coverage"
+          RUSTDOCFLAGS: "-Cinstrument-coverage -Zunstable-options --persist-doctests target/debug/doctestbins"
 
       - name: Generate coverage report
         uses: actions-rs/grcov@v0.1
